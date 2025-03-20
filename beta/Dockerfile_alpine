@@ -1,0 +1,57 @@
+FROM alpine:latest
+
+# Set environment variables
+ENV WALLET_ADDRESS="YOUR_MONERO_WALLET_ADDRESS"
+ENV POOL_URL="pool.supportxmr.com:3333"
+ENV RIG_ID="DockerAlpineRig"
+
+# Install dependencies
+RUN apk update && apk add --no-cache \
+    build-base \
+    git \
+    cmake \
+    libuv-dev \
+    libmicrohttpd-dev \
+    openssl-dev \
+    hwloc-dev
+
+# Clone and build XMRig
+WORKDIR /opt
+RUN git clone https://github.com/xmrig/xmrig.git
+WORKDIR /opt/xmrig
+RUN mkdir build
+WORKDIR /opt/xmrig/build
+RUN cmake .. -DCMAKE_BUILD_TYPE=Release
+RUN make -j$(nproc)
+
+# Create XMRig configuration
+RUN cat > config.json << EOL
+{
+    "autosave": true,
+    "cpu": true,
+    "opencl": false,
+    "cuda": false,
+    "donate-level": 1,
+    "pools": [
+        {
+            "url": "${POOL_URL}",
+            "user": "${WALLET_ADDRESS}",
+            "pass": "x",
+            "keepalive": true,
+            "tls": false,
+            "rig-id": "${RIG_ID}"
+        }
+    ]
+}
+EOL
+
+# Create startup script that will inject environment variables
+RUN echo '#!/bin/sh' > /opt/start-mining.sh && \
+    echo 'sed -i "s/YOUR_MONERO_WALLET_ADDRESS/$WALLET_ADDRESS/g" /opt/xmrig/build/config.json' >> /opt/start-mining.sh && \
+    echo 'sed -i "s/pool.supportxmr.com:3333/$POOL_URL/g" /opt/xmrig/build/config.json' >> /opt/start-mining.sh && \
+    echo 'sed -i "s/DockerAlpineRig/$RIG_ID/g" /opt/xmrig/build/config.json' >> /opt/start-mining.sh && \
+    echo 'cd /opt/xmrig/build && ./xmrig' >> /opt/start-mining.sh && \
+    chmod +x /opt/start-mining.sh
+
+# Set the entrypoint to our startup script
+ENTRYPOINT ["/bin/sh", "/opt/start-mining.sh"]
