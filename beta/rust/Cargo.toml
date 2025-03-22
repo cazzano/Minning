@@ -11,9 +11,9 @@ path = "src/modules/run.rs"
 name = "init"  # This is the name you use with cargo run --bin run
 path = "src/modules/init.rs"
 
-[[bin]]
-name = "config"  # This is the name you use with cargo run --bin run
-path = "src/modules/config.rs"
+#[[bin]]
+#name = "config"  # This is the name you use with cargo run --bin run
+#path = "src/modules/config.rs"
 
 
 [dependencies]
