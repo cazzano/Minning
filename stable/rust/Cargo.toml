@@ -1,0 +1,19 @@
+[package]
+name = "rust"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "run"  # This is the name you use with cargo run --bin run
+path = "src/modules/run.rs"
+
+[[bin]]
+name = "init"  # This is the name you use with cargo run --bin run
+path = "src/modules/init.rs"
+
+[[bin]]
+name = "config"  # This is the name you use with cargo run --bin run
+path = "src/modules/config.rs"
+
+
+[dependencies]
