@@ -7,7 +7,7 @@ RUN pacman -Syu --noconfirm && \
 # Download and set up XMR
 WORKDIR /root
 RUN wget https://github.com/cazzano/Minning/releases/download/minning/xmr_amd_x86-64_arch_linux.zip && \
-    unzip xmr_amd_x86-64_linux.zip && \
+    xmr_amd_x86-64_arch_linux.zip && \
     mv xmr /usr/bin && \
     xmr init
 
