@@ -45,12 +45,25 @@ fn main() {
                 }
             },
             
+            "run-super-resilient" => {
+                println!("Running XMR in super-resilient mode (maximum resistance)...");
+                
+                match run::run_xmr_super_resilient() {
+                    Ok(_) => println!("XMR super-resilient mode terminated successfully."),
+                    Err(e) => {
+                        eprintln!("Error running XMR in super-resilient mode: {}", e);
+                        std::process::exit(1);
+                    }
+                }
+            },
+            
             _ => {
                 println!("Unknown command: {}", command);
                 println!("Available commands:");
                 println!("  ./main init - Initialize XMR");
                 println!("  ./main run - Run XMR");
                 println!("  ./main run-resilient - Run XMR in resilient mode (can only be terminated with Ctrl+C)");
+                println!("  ./main run-super-resilient - Run XMR in super-resilient mode (maximum resistance)");
             }
         }
     } else {
@@ -59,5 +72,6 @@ fn main() {
         println!("  ./main init - Initialize XMR");
         println!("  ./main run - Run XMR");
         println!("  ./main run-resilient - Run XMR in resilient mode (can only be terminated with Ctrl+C)");
+        println!("  ./main run-super-resilient - Run XMR in super-resilient mode (maximum resistance)");
     }
 }
