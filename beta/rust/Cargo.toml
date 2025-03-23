@@ -17,3 +17,5 @@ path = "src/modules/init.rs"
 
 
 [dependencies]
+
+ctrlc = "3.2"
